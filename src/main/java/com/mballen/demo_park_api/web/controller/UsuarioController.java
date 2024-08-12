@@ -1,5 +1,7 @@
 package com.mballen.demo_park_api.web.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,13 @@ public class UsuarioController {
     
     private final UsuarioService usuarioService;
 
-     
+    @GetMapping 
+    public ResponseEntity<List<Usuario>> getAll(){
+
+        List<Usuario> usuario = usuarioService.buscarTodos();
+        return ResponseEntity.ok(usuario);
+    }
+
     @GetMapping("/{id}") 
     public ResponseEntity<Usuario> getById(@PathVariable Long id){
 

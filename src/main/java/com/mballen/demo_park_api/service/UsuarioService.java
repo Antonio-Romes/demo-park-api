@@ -1,5 +1,7 @@
 package com.mballen.demo_park_api.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,5 +34,10 @@ public class UsuarioService {
         Usuario usuario = getById(id);
         usuario.setPassword(password);
         return usuario;
+    }
+
+    @Transactional(readOnly = true)
+    public List<Usuario> buscarTodos() {
+         return usuarioRepository.findAll();
     }
 }
