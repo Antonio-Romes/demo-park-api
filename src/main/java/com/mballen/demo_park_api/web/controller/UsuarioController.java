@@ -37,10 +37,10 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}") 
-    public ResponseEntity<Usuario> getById(@PathVariable Long id){
+    public ResponseEntity<UsuarioResponseDto> getById(@PathVariable Long id){
 
         Usuario usuario = usuarioService.getById(id);
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok( UsuarioMapper.toUsuarioResponseDto(usuario));
     }
 
     @PatchMapping("/{id}") 
