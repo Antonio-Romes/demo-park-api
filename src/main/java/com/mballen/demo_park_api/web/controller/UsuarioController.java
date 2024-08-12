@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mballen.demo_park_api.entity.Usuario;
 import com.mballen.demo_park_api.service.UsuarioService;
+import com.mballen.demo_park_api.web.dto.UsuarioCreateDto;
+import com.mballen.demo_park_api.web.dto.UsuarioResponseDto;
+import com.mballen.demo_park_api.web.dto.mapper.UsuarioMapper;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,10 +51,10 @@ public class UsuarioController {
     }
 
     @PostMapping 
-    public ResponseEntity<Usuario> create(@RequestBody Usuario usuario){
+    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto usuarioCreateDto){
 
-        Usuario _usuario = usuarioService.salvar(usuario);
-        return ResponseEntity.status(HttpStatus.CREATED).body(_usuario);
+        Usuario _usuario = usuarioService.salvar( UsuarioMapper.toUsuario(usuarioCreateDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toUsuarioResponseDto(_usuario));
     }
 
 
