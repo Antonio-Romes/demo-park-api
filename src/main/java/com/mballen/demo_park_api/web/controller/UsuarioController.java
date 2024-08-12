@@ -12,6 +12,7 @@ import com.mballen.demo_park_api.service.UsuarioService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -29,6 +30,13 @@ public class UsuarioController {
 
         Usuario usuario = usuarioService.getById(id);
         return ResponseEntity.ok(usuario);
+    }
+
+    @PatchMapping("/{id}") 
+    public ResponseEntity<Usuario> updatePassword(@PathVariable Long id, @RequestBody Usuario usuario){
+
+        Usuario _usuario = usuarioService.editarSenha(id, usuario.getPassword());
+        return ResponseEntity.ok(_usuario);
     }
 
     @PostMapping 
