@@ -19,4 +19,11 @@ public class UsuarioService {
        
         return usuarioRepository.save(usuario);
     }
+
+    @Transactional(readOnly = true)// definer que a transação é de somente leitura no banco
+    public Usuario getById(Long id) {
+         return usuarioRepository.findById(id).orElseThrow(
+            () -> new RuntimeException("Usuário não encontrado")
+         );
+    }
 }
