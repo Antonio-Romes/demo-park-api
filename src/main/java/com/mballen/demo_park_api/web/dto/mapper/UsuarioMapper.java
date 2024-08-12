@@ -1,6 +1,9 @@
 package com.mballen.demo_park_api.web.dto.mapper;
   
 
+import java.util.List; 
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper; 
 
 import com.mballen.demo_park_api.entity.Usuario;
@@ -19,6 +22,10 @@ public class UsuarioMapper {
         UsuarioResponseDto usuarioResponseDto = mapper.map(usuario, UsuarioResponseDto.class);
         usuarioResponseDto.setRole(usuario.getRole().name().substring("ROLE_".length()));
         return usuarioResponseDto; 
+    }
+
+    public static List<UsuarioResponseDto> toListDto(List<Usuario> usuarios){
+        return usuarios.stream().map(usuario -> toUsuarioResponseDto(usuario)).collect(Collectors.toList());
     }
 
 }

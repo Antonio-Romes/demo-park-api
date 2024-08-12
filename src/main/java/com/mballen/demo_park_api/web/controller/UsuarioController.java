@@ -31,10 +31,10 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @GetMapping 
-    public ResponseEntity<List<Usuario>> getAll(){
+    public ResponseEntity<List<UsuarioResponseDto>> getAll(){
 
         List<Usuario> usuario = usuarioService.buscarTodos();
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.ok(UsuarioMapper.toListDto(usuario));
     }
 
     @GetMapping("/{id}") 
@@ -47,7 +47,7 @@ public class UsuarioController {
     @PatchMapping("/{id}") 
     public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UsuarioSenhaDto dto){
 
-        Usuario usuario = usuarioService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(), dto.getConfirmaSenha());
+        usuarioService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(), dto.getConfirmaSenha());
         return ResponseEntity.noContent().build();
     }
 
