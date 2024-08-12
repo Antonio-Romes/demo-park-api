@@ -12,6 +12,7 @@ import com.mballen.demo_park_api.entity.Usuario;
 import com.mballen.demo_park_api.service.UsuarioService;
 import com.mballen.demo_park_api.web.dto.UsuarioCreateDto;
 import com.mballen.demo_park_api.web.dto.UsuarioResponseDto;
+import com.mballen.demo_park_api.web.dto.UsuarioSenhaDto;
 import com.mballen.demo_park_api.web.dto.mapper.UsuarioMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -44,10 +45,10 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}") 
-    public ResponseEntity<Usuario> updatePassword(@PathVariable Long id, @RequestBody Usuario usuario){
+    public ResponseEntity<Void> updatePassword(@PathVariable Long id, @RequestBody UsuarioSenhaDto dto){
 
-        Usuario _usuario = usuarioService.editarSenha(id, usuario.getPassword());
-        return ResponseEntity.ok(_usuario);
+        Usuario usuario = usuarioService.editarSenha(id, dto.getSenhaAtual(),dto.getNovaSenha(), dto.getConfirmaSenha());
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping 
