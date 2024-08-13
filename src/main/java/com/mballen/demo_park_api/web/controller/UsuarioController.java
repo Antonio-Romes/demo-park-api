@@ -17,6 +17,7 @@ import com.mballen.demo_park_api.web.dto.mapper.UsuarioMapper;
 import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -37,6 +38,13 @@ public class UsuarioController {
     
     private final UsuarioService usuarioService;
 
+    @Operation(summary = "Recuperar todos usuário", description = "Recuperar todos usuário cadastrados",
+                responses = {
+                    @ApiResponse(responseCode = "200", description="Recurso todos usuários cadastrados",
+                    content = @Content(mediaType = "application/json",
+                    array = @ArraySchema( schema = @Schema(implementation = UsuarioResponseDto.class)))),
+                     
+                })
     @GetMapping 
     public ResponseEntity<List<UsuarioResponseDto>> getAll(){
 
