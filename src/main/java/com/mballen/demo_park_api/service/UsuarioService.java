@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mballen.demo_park_api.entity.Usuario;
 import com.mballen.demo_park_api.excption.EntityNotFoundException;
+import com.mballen.demo_park_api.excption.PasswordInvalidException;
 import com.mballen.demo_park_api.excption.UsernameUniqueViolationExcpion;
 import com.mballen.demo_park_api.repository.UsuarioRepository;
 
@@ -43,12 +44,12 @@ public class UsuarioService {
     @Transactional
     public Usuario editarSenha(Long id, String senhaAtual, String novaSenha, String confirmarSenha) {
         if(!novaSenha.equals(confirmarSenha)){
-            throw new RuntimeException("Nova senha não confere com confirmação de senha!");
+            throw new PasswordInvalidException("Nova senha não confere com confirmação de senha!");
         }
         Usuario usuario = getById(id);
 
         if(!usuario.getPassword().equals(senhaAtual)){
-            throw new RuntimeException("Sua senha não confere!");
+            throw new PasswordInvalidException("Sua senha não confere!");
         }
 
         usuario.setPassword(novaSenha);
