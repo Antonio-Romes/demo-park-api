@@ -15,6 +15,7 @@ import com.mballen.demo_park_api.web.dto.UsuarioResponseDto;
 import com.mballen.demo_park_api.web.dto.UsuarioSenhaDto;
 import com.mballen.demo_park_api.web.dto.mapper.UsuarioMapper;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class UsuarioController {
     }
 
     @PostMapping 
-    public ResponseEntity<UsuarioResponseDto> create(@RequestBody UsuarioCreateDto usuarioCreateDto){
+    public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto usuarioCreateDto){
 
         Usuario _usuario = usuarioService.salvar( UsuarioMapper.toUsuario(usuarioCreateDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toUsuarioResponseDto(_usuario));
