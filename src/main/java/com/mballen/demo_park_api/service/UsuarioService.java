@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mballen.demo_park_api.entity.Usuario;
+import com.mballen.demo_park_api.excption.EntityNotFoundException;
 import com.mballen.demo_park_api.excption.UsernameUniqueViolationExcpion;
 import com.mballen.demo_park_api.repository.UsuarioRepository;
 
+ 
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor // cria um metodo construdor e faze injeção de dependência do repositorio 
@@ -22,7 +24,7 @@ public class UsuarioService {
     public Usuario salvar(Usuario usuario) {
        try {
         return usuarioRepository.save(usuario);
-       } catch (DataIntegrityViolationException e) {
+       } catch (DataIntegrityViolationException e) {  
          throw new UsernameUniqueViolationExcpion(String.format("Username {%s} já cadastrado", usuario.getUsername()));
        }
         
@@ -31,7 +33,10 @@ public class UsuarioService {
     @Transactional(readOnly = true)// definer que a transação é de somente leitura no banco
     public Usuario getById(Long id) {
          return usuarioRepository.findById(id).orElseThrow(
-            () -> new RuntimeException("Usuário não encontrado")
+
+            // tomar cuidado, no jakarte tem a classe EntityNotFoundException, precisa importa a 
+            //classe que foi criada na pasta excption
+            () -> new EntityNotFoundException( String.format("Usuário id=%s não encontrado", id ))
          );
     }
 
