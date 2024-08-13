@@ -8,12 +8,25 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.mballen.demo_park_api.excption.UsernameUniqueViolationExcpion;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j 
 @RestControllerAdvice
 public class ApiExcptionHandler {
+    
+    @ExceptionHandler(UsernameUniqueViolationExcpion.class)
+    public ResponseEntity<ErrorMessage> methodArgumentNotValidException(RuntimeException ex, HttpServletRequest request){
+       
+        log.error("Api Error - ", ex);// Consegue ver no console onde ocorreu o erro
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT) // status 409, indica que teve conflido ao inserir dado no banco, ex campo unico
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.CONFLICT, ex.getMessage())); 
+    }
+
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorMessage> methodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request, BindingResult result){
