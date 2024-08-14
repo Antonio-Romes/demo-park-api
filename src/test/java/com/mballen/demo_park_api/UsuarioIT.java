@@ -136,4 +136,37 @@ public class UsuarioIT {
 
     }
 
+    @Test
+    public void getUsuario_ComIdExistente_RetornarUsuarioComStatus200(){
+        UsuarioResponseDto responseDto =  testClient
+        .get()
+        .uri("/api/v1/usuarios/100")   
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(UsuarioResponseDto.class)
+        .returnResult().getResponseBody();
+
+    
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(100);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUsername()).isEqualTo("ana@email.com");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("ADMIN"); 
+
+    }
+
+    @Test
+    public void getUsuario_ComIdInexistente_RetornarErrorMessageComStatus404(){
+        ErrorMessage responseBody =  testClient
+        .get()
+        .uri("/api/v1/usuarios/0")   
+        .exchange()
+        .expectStatus().isNotFound()
+        .expectBody(ErrorMessage.class)
+        .returnResult().getResponseBody();
+
+    
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404); 
+
+    }
 }
