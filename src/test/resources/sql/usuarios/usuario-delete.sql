@@ -1,1 +1,1 @@
-Delete from Usuario;
+TRUNCATE table Usuarios;
