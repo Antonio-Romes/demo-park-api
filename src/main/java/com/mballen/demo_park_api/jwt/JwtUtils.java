@@ -18,8 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtUtils {
     
-    private static final String JWT_BEARER = "Bearer ";
-   // private static final String JWT_AUTHORIZATION = "Authorization";
+    public static final String JWT_BEARER = "Bearer ";
+    public static final String JWT_AUTHORIZATION = "Authorization";
     private static final String SECRET_KEY = "jfhdgoi-jfhgewu-aldoifnenh";
     private static final Long EXPIRE_DAYS = (long) 0;
     private static final Long EXPIRE_HOURS = (long)0;
