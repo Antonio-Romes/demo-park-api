@@ -1,5 +1,7 @@
 package com.mballen.demo_park_api;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -278,4 +280,19 @@ public class UsuarioIT {
  
     }
 
+    @Test
+    public void listaDeUsuario_SemParametros_RetornarTodosUsuarioComStatus200(){
+       List<UsuarioResponseDto> responseDto =  testClient
+            .get()
+            .uri("/api/v1/usuarios")     
+            .exchange()
+            .expectStatus().isOk()
+            .expectBodyList(UsuarioResponseDto.class)
+            .returnResult().getResponseBody();
+
+        
+            org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();  
+            org.assertj.core.api.Assertions.assertThat(responseDto.size()).isEqualTo(3);  
+
+    }
 }
