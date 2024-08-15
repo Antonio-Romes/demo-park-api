@@ -3,6 +3,7 @@ package com.mballen.demo_park_api.service;
 import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,10 +21,12 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioService {
     
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
        try {
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
        } catch (DataIntegrityViolationException e) {  
          throw new UsernameUniqueViolationExcpion(String.format("Username {%s} já cadastrado", usuario.getUsername()));
@@ -48,11 +51,11 @@ public class UsuarioService {
         }
         Usuario usuario = getById(id);
 
-        if(!usuario.getPassword().equals(senhaAtual)){
+        if(!passwordEncoder.matches(senhaAtual, usuario.getPassword())){
             throw new PasswordInvalidException("Sua senha não confere!");
         }
 
-        usuario.setPassword(novaSenha);
+        usuario.setPassword(passwordEncoder.encode(novaSenha));
         return usuario;
     }
 

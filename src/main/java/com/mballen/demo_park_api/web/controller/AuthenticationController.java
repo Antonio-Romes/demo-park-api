@@ -32,6 +32,7 @@ public class AuthenticationController {
     private final JwtUserDetailsService detailsService;
     private final AuthenticationManager authenticationManager;
 
+    
     @PostMapping("/auth") 
     public ResponseEntity<?> Authentication(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto, HttpServletRequest request){
         
