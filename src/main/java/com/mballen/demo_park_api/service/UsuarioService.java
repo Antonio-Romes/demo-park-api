@@ -6,8 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.mballen.demo_park_api.entity.Usuario;
-import com.mballen.demo_park_api.entity.Usuario.Role;
+import com.mballen.demo_park_api.entity.Usuario; 
 import com.mballen.demo_park_api.excption.EntityNotFoundException;
 import com.mballen.demo_park_api.excption.PasswordInvalidException;
 import com.mballen.demo_park_api.excption.UsernameUniqueViolationExcpion;
