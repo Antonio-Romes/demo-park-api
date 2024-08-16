@@ -282,6 +282,7 @@ public class UsuarioIT {
         ErrorMessage responseBody =  testClient
             .patch()
             .uri("/api/v1/usuarios/100")    
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(new UsuarioSenhaDto("","",""))
             .exchange()
@@ -295,7 +296,8 @@ public class UsuarioIT {
 
             responseBody =  testClient
             .patch()
-            .uri("/api/v1/usuarios/100")    
+            .uri("/api/v1/usuarios/100") 
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))   
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(new UsuarioSenhaDto("12345","12345","12345"))
             .exchange()
@@ -309,7 +311,8 @@ public class UsuarioIT {
 
             responseBody =  testClient
             .patch()
-            .uri("/api/v1/usuarios/100")    
+            .uri("/api/v1/usuarios/100")   
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456")) 
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(new UsuarioSenhaDto("1234567","1234567","1234567"))
             .exchange()
@@ -327,7 +330,8 @@ public class UsuarioIT {
     public void editarSenha_ComSenhaInvalidas_RetornarErrorMessageComStatus400(){
         ErrorMessage responseBody =  testClient
             .patch()
-            .uri("/api/v1/usuarios/100")    
+            .uri("/api/v1/usuarios/100")   
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456")) 
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(new UsuarioSenhaDto("123456","123456","000000"))
             .exchange()
@@ -342,6 +346,7 @@ public class UsuarioIT {
             responseBody =  testClient
             .patch()
             .uri("/api/v1/usuarios/100")    
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))
             .contentType(MediaType.APPLICATION_JSON)
             .bodyValue(new UsuarioSenhaDto("000000","123456","123456"))
             .exchange()
