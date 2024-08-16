@@ -144,6 +144,7 @@ public class UsuarioIT {
         UsuarioResponseDto responseDto =  testClient
         .get()
         .uri("/api/v1/usuarios/100")   
+        .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))
         .exchange()
         .expectStatus().isOk()
         .expectBody(UsuarioResponseDto.class)
@@ -155,6 +156,36 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseDto.getUsername()).isEqualTo("ana@email.com");
         org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("ADMIN"); 
 
+        responseDto =  testClient
+        .get()
+        .uri("/api/v1/usuarios/101")   
+        .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(UsuarioResponseDto.class)
+        .returnResult().getResponseBody();
+
+    
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(101);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUsername()).isEqualTo("bia@email.com");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("CLIENTE"); 
+
+
+        responseDto =  testClient
+        .get()
+        .uri("/api/v1/usuarios/101")   
+        .headers(JwtAuthentication.getHeaderAuthentication(testClient, "bia@email.com", "123456"))
+        .exchange()
+        .expectStatus().isOk()
+        .expectBody(UsuarioResponseDto.class)
+        .returnResult().getResponseBody();
+
+    
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(101);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUsername()).isEqualTo("bia@email.com");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("CLIENTE"); 
     }
 
     @Test
