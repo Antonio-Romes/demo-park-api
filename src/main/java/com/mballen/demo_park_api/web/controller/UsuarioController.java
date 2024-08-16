@@ -22,6 +22,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,12 +40,14 @@ public class UsuarioController {
     
     private final UsuarioService usuarioService;
 
-    @Operation(summary = "Recuperar todos usuário", description = "Recuperar todos usuário cadastrados",
+    @Operation(summary = "Recuperar todos usuário", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN",
+                security = @SecurityRequirement(name="security"),
                 responses = {
                     @ApiResponse(responseCode = "200", description="Recurso todos usuários cadastrados",
                     content = @Content(mediaType = "application/json",
                     array = @ArraySchema( schema = @Schema(implementation = UsuarioResponseDto.class)))),
-                     
+                    @ApiResponse(responseCode = "403", description="Usuário sem permissão para acessar este recurso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),                     
                 })
     @GetMapping 
     @PreAuthorize("hasRole('ADMIN')")
@@ -54,10 +57,13 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioMapper.toListDto(usuario));
     }
 
-    @Operation(summary = "Recuperar usuário pelo id", description = "Recuperar usuário pelo id",
+    @Operation(summary = "Recuperar usuário pelo id", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN|CLIENTE",
+                security = @SecurityRequirement(name="security"),
                 responses = {
                     @ApiResponse(responseCode = "200", description="Recurso encontrado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description="Usuário sem permissão para acessar este recurso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "404", description="Usuário não encontrado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     
@@ -70,11 +76,14 @@ public class UsuarioController {
         return ResponseEntity.ok( UsuarioMapper.toUsuarioResponseDto(usuario));
     }
 
-    @Operation(summary = "Altera senha do usuário", description = "Altera senha do usuário",
+    @Operation(summary = "Altera senha do usuário", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN|CLIENTE",
+    security = @SecurityRequirement(name="security"),
     responses = {
         @ApiResponse(responseCode = "204", description="Senha alterada com sucesso",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
         @ApiResponse(responseCode = "400", description="Senha não confere",
+        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+        @ApiResponse(responseCode = "403", description="Usuário sem permissão para acessar este recurso",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         @ApiResponse(responseCode = "404", description="Usuário não encontrado",
         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
@@ -91,6 +100,7 @@ public class UsuarioController {
     }
 
     @Operation(summary = "Criar um novo usuário", description = "Recurso para criar um novo usuário",
+                
                 responses = {
                     @ApiResponse(responseCode = "201", description="Recurso criado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
