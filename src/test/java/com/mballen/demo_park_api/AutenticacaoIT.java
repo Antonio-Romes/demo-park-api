@@ -9,6 +9,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.mballen.demo_park_api.jwt.JwtToken;
 import com.mballen.demo_park_api.web.dto.UsuarioLoginDto;
+import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -31,5 +32,34 @@ public class AutenticacaoIT {
             .returnResult().getResponseBody();
 
             org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+    }
+
+    @Test
+    public void autenticar_ComCredenciaisInvalidas_RetornarErrorMessageComStatus400(){
+        ErrorMessage responseBody = webTestClient
+            .post()
+            .uri("/api/v1/auth")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(new UsuarioLoginDto("a@email.com","123456"))
+            .exchange()
+            .expectStatus().isForbidden()
+            .expectBody(ErrorMessage.class)
+            .returnResult().getResponseBody();
+
+            org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+            org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
+
+            responseBody = webTestClient
+            .post()
+            .uri("/api/v1/auth")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(new UsuarioLoginDto("ana@email.com","000000"))
+            .exchange()
+            .expectStatus().isForbidden()
+            .expectBody(ErrorMessage.class)
+            .returnResult().getResponseBody();
+
+            org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+            org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
     }
 }
