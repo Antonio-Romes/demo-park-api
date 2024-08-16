@@ -1,7 +1,6 @@
 package com.mballen.demo_park_api.jwt;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key; 
+import java.nio.charset.StandardCharsets; 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -23,14 +22,14 @@ public class JwtUtils {
     private static final String SECRET_KEY = "jfhdgoi-jfhgewu-aldoifnenh";
     private static final Long EXPIRE_DAYS = (long) 0;
     private static final Long EXPIRE_HOURS = (long)0;
-    private static final Long EXPIRE_MINUTES = (long) 2; 
+    private static final Long EXPIRE_MINUTES = (long) 10; 
 
     private JwtUtils(){
 
     }
 
-    private static Key generateKey(){
-        return (Key) Algorithm.HMAC256(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+    private static Algorithm generateKey(){
+        return  Algorithm.HMAC256(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
 
     private static Date toExpireDate(Date start){
@@ -62,7 +61,7 @@ public class JwtUtils {
 
     public static DecodedJWT getDecodedToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+            Algorithm algorithm = Algorithm.HMAC256(generateKey().toString());
             return JWT.require(algorithm).build().verify(refactorToken(token));
         } catch (JWTVerificationException e) {
             log.error("Token inválido", e.getMessage());

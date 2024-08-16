@@ -15,7 +15,7 @@ import com.mballen.demo_park_api.jwt.JwtUserDetailsService;
 import com.mballen.demo_park_api.web.dto.UsuarioLoginDto;
 import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,18 +26,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("api/v1/auth")
 public class AuthenticationController {
     
     private final JwtUserDetailsService detailsService;
     private final AuthenticationManager authenticationManager;
 
     
-    @PostMapping("/auth") 
-    public ResponseEntity<?> Authentication(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto, HttpServletRequest request){
+    @PostMapping 
+    public ResponseEntity<?> OLAAuthentication(@RequestBody @Valid UsuarioLoginDto usuarioLoginDto, HttpServletRequest request){
         
         log.info("Processo de auteinticação pelo login {}", usuarioLoginDto.getUsername());
-
+         
         try {
             
             UsernamePasswordAuthenticationToken authenticationToken = 
