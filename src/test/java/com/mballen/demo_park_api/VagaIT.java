@@ -33,7 +33,7 @@ public class VagaIT {
     }
 
     @Test
-    public void comcriarVaga_ComCodigoJaExistente_RetornarErrorMessageComStatus409(){
+    public void criarVaga_ComCodigoJaExistente_RetornarErrorMessageComStatus409(){
         
         testClient
             .post()
@@ -50,7 +50,7 @@ public class VagaIT {
     }
 
     @Test
-    public void comcriarVaga_ComDadosInvalidos_RetornarErrorMessageComStatus422(){
+    public void criarVaga_ComDadosInvalidos_RetornarErrorMessageComStatus422(){
         
         testClient
             .post()
@@ -77,5 +77,36 @@ public class VagaIT {
             .jsonPath("status").isEqualTo(422)
             .jsonPath("method").isEqualTo("POST")
             .jsonPath("path").isEqualTo("/api/v1/vagas");
+    }
+
+    
+    @Test
+    public void buscarVaga_ComCodigoJaExistente_RetornarVagaComStatus200(){
+        
+        testClient
+            .get()
+            .uri("/api/v1/vagas/{codigo}","A-01") 
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))  
+            .exchange()
+            .expectStatus().isOk()  
+            .expectBody()
+            .jsonPath("id").isEqualTo(10)
+            .jsonPath("codigo").isEqualTo("A-01")
+            .jsonPath("status").isEqualTo("LIVRE");
+    }
+
+    @Test
+    public void buscarVaga_ComCodigoInexistente_RetornarErrorMessageComStatus404(){
+        
+        testClient
+            .get()
+            .uri("/api/v1/vagas/{codigo}","A-11") 
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "ana@email.com", "123456"))  
+            .exchange()
+            .expectStatus().isNotFound()  
+            .expectBody()
+            .jsonPath("status").isEqualTo(404)
+            .jsonPath("method").isEqualTo("GET")
+            .jsonPath("path").isEqualTo("/api/v1/vagas/A-11");
     }
 }
