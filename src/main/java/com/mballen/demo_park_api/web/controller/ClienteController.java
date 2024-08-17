@@ -3,8 +3,7 @@ package com.mballen.demo_park_api.web.controller;
  
  
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Pageable; 
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus; 
 import org.springframework.http.ResponseEntity;
@@ -121,6 +120,15 @@ public class ClienteController  {
         return ResponseEntity.ok(PageableMApper.tDto(clientes));
     }
 
+    @Operation(summary = "Recuperar dados do clientes",
+                description = "Requisição exige uso de um bearer token. Acesso restrito a Role='CLIENTE'",
+                security = @SecurityRequirement(name = "security"),
+                responses = {
+                    @ApiResponse(responseCode = "200", description="Recurso recuperado com sucesso",
+                    content = @Content(mediaType = "application/json;charset=UTF-8",  schema = @Schema(implementation = ClienteResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description="Recurso não permito ao perfil de 'ADMIN'",
+                    content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),                     
+                })
     @GetMapping("/detalhes")
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<ClienteResponseDto> getDetalhes(@AuthenticationPrincipal JwtUserDetails userDetails){
