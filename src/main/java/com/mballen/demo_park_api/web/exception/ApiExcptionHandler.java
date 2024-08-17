@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.mballen.demo_park_api.excption.CodigoUniqueViolationException;
 import com.mballen.demo_park_api.excption.CpfUniqueViolationException;
 import com.mballen.demo_park_api.excption.EntityNotFoundException;
 import com.mballen.demo_park_api.excption.PasswordInvalidException;
@@ -54,7 +55,7 @@ public class ApiExcptionHandler {
                 .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage())); 
     }
 
-    @ExceptionHandler({UsernameUniqueViolationExcpion.class, CpfUniqueViolationException.class})
+    @ExceptionHandler({UsernameUniqueViolationExcpion.class, CpfUniqueViolationException.class,CodigoUniqueViolationException.class})
     public ResponseEntity<ErrorMessage> usernameUniqueViolationExcpion(RuntimeException ex, HttpServletRequest request){
        
         log.error("Api Error - ", ex);// Consegue ver no console onde ocorreu o erro
