@@ -1,9 +1,9 @@
 package com.mballen.demo_park_api.web.controller;
 
-import java.util.List;
+ 
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Pageable; 
 import org.springframework.http.HttpStatus; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,20 +16,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mballen.demo_park_api.entity.Cliente;
+import com.mballen.demo_park_api.entity.projection.ClienteProjection;
 import com.mballen.demo_park_api.jwt.JwtUserDetails;
 import com.mballen.demo_park_api.service.ClienteService;
 import com.mballen.demo_park_api.service.UsuarioService;
 import com.mballen.demo_park_api.web.dto.ClienteCreateDto;
-import com.mballen.demo_park_api.web.dto.ClienteResponseDto; 
+import com.mballen.demo_park_api.web.dto.ClienteResponseDto;
+import com.mballen.demo_park_api.web.dto.PageableDto;
 import com.mballen.demo_park_api.web.dto.mapper.ClienteMapper;
+import com.mballen.demo_park_api.web.dto.mapper.PageableMApper;
 import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.Operation; 
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.responses.ApiResponse; 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -86,8 +87,8 @@ public class ClienteController  {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<Cliente>> getAll( Pageable pageable){
-        Page<Cliente> cliente = clienteService.buscarTodos( pageable);
-        return ResponseEntity.ok(cliente);
+    public ResponseEntity<PageableDto> getAll( Pageable pageable){
+        Page<ClienteProjection> clientes = clienteService.buscarTodos( pageable);
+        return ResponseEntity.ok(PageableMApper.tDto(clientes));
     }
 }
