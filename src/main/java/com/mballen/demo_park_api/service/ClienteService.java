@@ -8,6 +8,7 @@ import com.mballen.demo_park_api.entity.Cliente;
 import com.mballen.demo_park_api.excption.CpfUniqueViolationException;
 import com.mballen.demo_park_api.repository.ClienteRepository;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -25,5 +26,13 @@ public class ClienteService {
         } catch (DataIntegrityViolationException ex) { 
             throw new CpfUniqueViolationException(String.format("CPF '%s' não pode ser cadastrado, já existe no sistema", cliente.getCpf()));
         }
+    }
+
+    @Transactional(readOnly = true)
+    public Cliente buscarPorId(Long id) {
+         
+        return clienteRepository.findById(id).orElseThrow(
+            () -> new EntityNotFoundException(String.format("Cliente id = %s não encontrado no sistema", id))
+        );
     }
 }
