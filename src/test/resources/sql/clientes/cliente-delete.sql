@@ -1,0 +1,3 @@
+TRUNCATE table Clientes;
+
+TRUNCATE table Usuarios RESTART IDENTITY CASCADE;
