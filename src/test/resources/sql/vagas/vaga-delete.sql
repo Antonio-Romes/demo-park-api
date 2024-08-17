@@ -1,0 +1,2 @@
+TRUNCATE table Vagas;
+TRUNCATE table Usuarios RESTART IDENTITY CASCADE;
