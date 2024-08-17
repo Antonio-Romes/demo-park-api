@@ -1,5 +1,9 @@
 package com.mballen.demo_park_api.web.controller;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -78,5 +82,12 @@ public class ClienteController  {
     public ResponseEntity<ClienteResponseDto> getById(@PathVariable Long id){
         Cliente cliente = clienteService.buscarPorId(id);
         return ResponseEntity.ok(ClienteMapper.toClienteResponseDto(cliente));
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<Cliente>> getAll( Pageable pageable){
+        Page<Cliente> cliente = clienteService.buscarTodos( pageable);
+        return ResponseEntity.ok(cliente);
     }
 }
