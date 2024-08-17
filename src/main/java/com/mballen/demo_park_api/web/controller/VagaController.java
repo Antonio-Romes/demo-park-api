@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable; 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 
 
@@ -41,10 +42,12 @@ public class VagaController {
      @Operation(summary = "Criar um novo vaga", 
                 description = "Recurso para criar uma nova vaga."+
                         "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
-                 //security = @SecurityRequirement(name = "security"),
+                security = @SecurityRequirement(name = "security"),
                 responses = {
                     @ApiResponse(responseCode = "201", description="Recurso criado com sucesso",
                         headers = @Header(name = HttpHeaders.LOCATION, description = "URL do recurso criado")),
+                    @ApiResponse(responseCode = "403", description="Cliente não tem permissão de acesso",
+                    content = @Content(mediaType = "application/json,charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "409", description="Cliente CPF já cadastrado no sistema",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))), 
                     @ApiResponse(responseCode = "422", description="Recurso não processado por falta de dados ou dados inválidos",
@@ -67,10 +70,12 @@ public class VagaController {
     @Operation(summary = "Localizar uma vaga", 
     description = "Recurso para retornar uma vaga pelo seu código."+
             "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
-     //security = @SecurityRequirement(name = "security"),
+     security = @SecurityRequirement(name = "security"),
     responses = {
         @ApiResponse(responseCode = "200", description="Recurso criado com sucesso",
         content = @Content(mediaType = "application/json,charset=UTF-8", schema = @Schema(implementation = VagaResponseDto.class))),
+        @ApiResponse(responseCode = "403", description="Cliente não tem permissão de acesso",
+        content = @Content(mediaType = "application/json,charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))), 
         @ApiResponse(responseCode = "404", description="Cliente CPF já cadastrado no sistema",
         content = @Content(mediaType = "application/json,charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))), 
     })

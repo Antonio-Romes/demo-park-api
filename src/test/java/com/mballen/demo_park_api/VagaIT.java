@@ -109,4 +109,36 @@ public class VagaIT {
             .jsonPath("method").isEqualTo("GET")
             .jsonPath("path").isEqualTo("/api/v1/vagas/A-11");
     }
+
+    @Test
+    public void criarVaga_ComUsuarioInvalidos_RetornarErrorMessageComStatus403(){
+        
+        testClient
+            .post()
+            .uri("/api/v1/vagas")
+            .contentType(MediaType.APPLICATION_JSON)
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "bia@email.com", "123456")) 
+            .bodyValue(new VagaCreateDto("A-11","LIVRE"))
+            .exchange()
+            .expectStatus().isForbidden()  
+            .expectBody()
+            .jsonPath("status").isEqualTo(403)
+            .jsonPath("method").isEqualTo("POST")
+            .jsonPath("path").isEqualTo("/api/v1/vagas");
+    }
+
+    @Test
+    public void buscarVaga_ComUsuarioInvalidos_RetornarErrorMessageComStatus403(){
+        
+        testClient
+            .get()
+            .uri("/api/v1/vagas/{codigo}","A-01") 
+            .headers(JwtAuthentication.getHeaderAuthentication(testClient, "bia@email.com", "123456"))  
+            .exchange()
+            .expectStatus().isForbidden()  
+            .expectBody()
+            .jsonPath("status").isEqualTo(403)
+            .jsonPath("method").isEqualTo("GET")
+            .jsonPath("path").isEqualTo("/api/v1/vagas/A-01");
+    }
 }
