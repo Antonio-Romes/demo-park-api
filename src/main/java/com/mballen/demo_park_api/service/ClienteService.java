@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mballen.demo_park_api.entity.Cliente;
 import com.mballen.demo_park_api.entity.projection.ClienteProjection;
 import com.mballen.demo_park_api.excption.CpfUniqueViolationException;
+import com.mballen.demo_park_api.excption.EntityNotFoundException;
 import com.mballen.demo_park_api.repository.ClienteRepository;
-
-import jakarta.persistence.EntityNotFoundException;
+ 
 import lombok.RequiredArgsConstructor; 
 
 @RequiredArgsConstructor
@@ -48,5 +48,12 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public Cliente buscarPorUsuarioId(Long id) {
         return clienteRepository.findByUsuarioId(id);
+    }
+    
+    @Transactional(readOnly = true)
+    public Cliente buscarPorCpf(String cpf) {
+        return clienteRepository.findByCpf(cpf).orElseThrow(
+            () -> new EntityNotFoundException(String.format("Cliente com CPF '%s' não encontrado", cpf))
+        );
     }
 }
