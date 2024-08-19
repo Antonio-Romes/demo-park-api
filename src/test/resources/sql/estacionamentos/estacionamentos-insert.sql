@@ -13,7 +13,7 @@ insert into Vagas (id, codigo,status) values (400, 'A-04', 'LIVRE');
 insert into Vagas (id, codigo,status) values (500, 'A-05', 'LIVRE');
 
 INSERT INTO CLIENTES_TEM_VAGAS (numero_recibo, placa, marca, modelo,cor, data_entrada, id_cliente, id_vaga)
-    VALUES ('20230313-101300','FIT-1020','FIT','PALIO','VERDE','2023-03-13 10:15:00', 22 ,100);
+    VALUES ('20230313-101300','FIT-1020','FIAT','PALIO','VERDE','2023-03-13 10:15:00', 22 ,100);
 
 INSERT INTO CLIENTES_TEM_VAGAS (numero_recibo, placa, marca, modelo,cor, data_entrada, id_cliente, id_vaga)
     VALUES ('20233014-101400','SIE-1020','FIAT','SIENA','BRANCO','2023-03-14 10:15:00', 21 ,200);

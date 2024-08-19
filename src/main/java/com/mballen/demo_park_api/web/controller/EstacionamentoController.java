@@ -12,6 +12,8 @@ import com.mballen.demo_park_api.web.dto.EstacionamentoResponseDto;
 import com.mballen.demo_park_api.web.dto.mapper.ClienteVagaMapper;
 import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable; 
+
+
 
 
 @Tag(name = "Estacionamentos", description = "Operações de registro de entrada e saída de um ceículo do estacionamento.")
@@ -71,9 +75,22 @@ public class EstacionamentoController {
          return ResponseEntity.created(location).body(responseDto);
     }
 
-
+    @Operation(summary = "Localizar um veiculo estacionado",
+                description = "Recurso para retornar um veículo estacionado pelo numero do recibo. Requisição exige exige uso de um bearer token.",
+                security = @SecurityRequirement(name = "security"),
+                parameters ={
+                    @Parameter(in = ParameterIn.PATH, name = "recibo", description="Número do recibo gerado pelo check-in")
+                },
+                responses = {
+                    @ApiResponse(responseCode = "200", description="Recurso localizado com sucesso", 
+                        content = @Content(mediaType = "application/json;charset=UTF-8", 
+                        schema = @Schema(implementation = EstacionamentoResponseDto.class))), 
+                    @ApiResponse(responseCode = "404", description="Número de recibo não encontado.",
+                        content = @Content(mediaType = "application/json,charset=UTF-8",
+                        schema = @Schema(implementation = ErrorMessage.class))), 
+                })
     @GetMapping("/check-in/{recibo}") 
-    @PreAuthorize("hasAndRole('ADMIN','CLIENTE')")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENTE')")
     public ResponseEntity<EstacionamentoResponseDto> getByRecibo(@PathVariable String recibo){
         ClienteVaga clienteVaga = clienteVagaService.buscarPorRecibo(recibo); 
         EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
