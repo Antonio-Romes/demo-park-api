@@ -25,14 +25,15 @@ public class EstacionamentoIT {
     public void criaCheckIn_ComDadosValidos_RetornarCreateAndLocation(){
 
         EstacionamentoCreateDto createDto = EstacionamentoCreateDto.builder()
-            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0").cor("AZUL").clienteCpf("48810691016")
+            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0")
+            .cor("AZUL").clienteCpf("09191773016")
             .build();
 
             testClient
                 .post()
                 .uri("/api/v1/estacionamentos/check-in")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com", "123456"))
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com.br", "123456"))
                 .bodyValue(createDto)
                 .exchange()
                 .expectStatus().isCreated()
@@ -51,14 +52,15 @@ public class EstacionamentoIT {
     public void criaCheckIn_ComRoleCliente_RetornarErrorComStatus403(){
 
         EstacionamentoCreateDto createDto = EstacionamentoCreateDto.builder()
-            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0").cor("AZUL").clienteCpf("48810691016")
+            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0")
+            .cor("AZUL").clienteCpf("09191773016")
             .build();
 
             testClient
                 .post() 
                 .uri("/api/v1/estacionamentos/check-in")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com", "123456")) 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com.br", "123456")) 
                 .bodyValue(createDto)
                 .exchange()
                 .expectStatus().isForbidden() 
@@ -79,7 +81,7 @@ public class EstacionamentoIT {
                 .post() 
                 .uri("/api/v1/estacionamentos/check-in")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com", "123456")) 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com.br", "123456")) 
                 .bodyValue(createDto)
                 .exchange()
                 .expectStatus().isEqualTo(422) 
@@ -93,14 +95,15 @@ public class EstacionamentoIT {
     public void criaCheckIn_ComCpfInexistente_RetornarErrorComStatus404(){
 
         EstacionamentoCreateDto createDto = EstacionamentoCreateDto.builder()
-            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0").cor("AZUL").clienteCpf("99572896083")
+            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0")
+            .cor("AZUL").clienteCpf("99572896083")
             .build();
 
             testClient
                 .post() 
                 .uri("/api/v1/estacionamentos/check-in")
                 .contentType(MediaType.APPLICATION_JSON)
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com", "123456")) 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com.br", "123456")) 
                 .bodyValue(createDto)
                 .exchange()
                 .expectStatus().isNotFound() 
@@ -116,7 +119,7 @@ public class EstacionamentoIT {
             testClient
                 .get() 
                 .uri("/api/v1/estacionamentos/check-in/{recibo}","20230313-101300") 
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com", "123456"))  
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com.br", "123456"))  
                 .exchange()
                 .expectStatus().isOk() 
                 .expectBody()
@@ -135,7 +138,7 @@ public class EstacionamentoIT {
             testClient
                 .get() 
                 .uri("/api/v1/estacionamentos/check-in/{recibo}","20230313-101300") 
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com", "123456"))  
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com.br", "123456"))  
                 .exchange()
                 .expectStatus().isOk() 
                 .expectBody()
@@ -154,7 +157,7 @@ public class EstacionamentoIT {
             testClient
                 .get() 
                 .uri("/api/v1/estacionamentos/check-in/{recibo}","20230313-999999") 
-                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com", "123456"))  
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bob@email.com.br", "123456"))  
                 .exchange()
                 .expectStatus().isNotFound() 
                 .expectBody()

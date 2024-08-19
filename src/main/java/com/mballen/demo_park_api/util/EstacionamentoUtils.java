@@ -47,7 +47,7 @@ public class EstacionamentoUtils {
     }
 
     public static BigDecimal calcularDesconto(BigDecimal valor, Long totalDeVezes) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'calcularDesconto'");
+        
+        return  valor.multiply(BigDecimal.valueOf(totalDeVezes));
     }
 }
