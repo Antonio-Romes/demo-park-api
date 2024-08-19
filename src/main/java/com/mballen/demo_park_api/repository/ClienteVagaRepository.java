@@ -9,5 +9,7 @@ import com.mballen.demo_park_api.entity.ClienteVaga;
 public interface ClienteVagaRepository  extends JpaRepository<ClienteVaga, Long>{
 
     Optional<ClienteVaga> findByReciboAndDataSaidaIsNull(String recibo);
+
+    Long countByClienteCpfAndDataSaidaIsNotNull(String cpf);
     
 }

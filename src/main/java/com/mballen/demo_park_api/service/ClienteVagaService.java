@@ -30,4 +30,10 @@ public class ClienteVagaService {
             )
          );
     }
+
+    @Transactional(readOnly = true)
+    public Long getTotalDeVezesEstacionamentoCompleto(String cpf) {
+        
+        return clienteVagaRepository.countByClienteCpfAndDataSaidaIsNotNull(cpf);
+    }
 }
