@@ -5,8 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mballen.demo_park_api.entity.ClienteVaga;
-import com.mballen.demo_park_api.service.EstacionamentoService;
-import com.mballen.demo_park_api.web.dto.ClienteResponseDto;
+import com.mballen.demo_park_api.service.ClienteVagaService;
+import com.mballen.demo_park_api.service.EstacionamentoService; 
 import com.mballen.demo_park_api.web.dto.EstacionamentoCreateDto;
 import com.mballen.demo_park_api.web.dto.EstacionamentoResponseDto;
 import com.mballen.demo_park_api.web.dto.mapper.ClienteVagaMapper;
@@ -29,6 +29,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable; 
+
 
 @Tag(name = "Estacionamentos", description = "Operações de registro de entrada e saída de um ceículo do estacionamento.")
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class EstacionamentoController {
     
     private final EstacionamentoService estacionamentoService;
+    private final ClienteVagaService clienteVagaService;
 
     @Operation(summary = "Operação de check-in",
                 description = "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
@@ -65,6 +69,15 @@ public class EstacionamentoController {
                 .buildAndExpand(clienteVaga.getRecibo())
                 .toUri();
          return ResponseEntity.created(location).body(responseDto);
+    }
+
+
+    @GetMapping("/check-in/{recibo}") 
+    @PreAuthorize("hasAndRole('ADMIN','CLIENTE')")
+    public ResponseEntity<EstacionamentoResponseDto> getByRecibo(@PathVariable String recibo){
+        ClienteVaga clienteVaga = clienteVagaService.buscarPorRecibo(recibo); 
+        EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
+        return ResponseEntity.ok(dto);
     }
     
 }
