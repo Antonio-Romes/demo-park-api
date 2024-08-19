@@ -88,4 +88,25 @@ public class EstacionamentoIT {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in")
                 .jsonPath("method").isEqualTo("POST") ;
     }
+
+    @Test
+    public void criaCheckIn_ComCpfInexistente_RetornarErrorComStatus404(){
+
+        EstacionamentoCreateDto createDto = EstacionamentoCreateDto.builder()
+            .placa("WER-1111").marca("FIAT").modelo("PALIO 1.0").cor("AZUL").clienteCpf("99572896083")
+            .build();
+
+            testClient
+                .post() 
+                .uri("/api/v1/estacionamentos/check-in")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com", "123456")) 
+                .bodyValue(createDto)
+                .exchange()
+                .expectStatus().isNotFound() 
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in")
+                .jsonPath("method").isEqualTo("POST") ;
+    }
 }
