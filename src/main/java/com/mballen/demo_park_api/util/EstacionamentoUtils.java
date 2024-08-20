@@ -14,6 +14,8 @@ public class EstacionamentoUtils {
     private static final double PRIMEIROS_15_MINUTES = 5.00;
     private static final double PRIMEIROS_60_MINUTES = 9.25;
     private static final double ADICIONAL_15_MINUTES = 1.75;
+    private static final double DESCONTO_PERCENTUAL = 0.30;
+
     //
     public static String gerarRecibor(){
         LocalDateTime date = LocalDateTime.now();
@@ -36,18 +38,22 @@ public class EstacionamentoUtils {
             total = PRIMEIROS_60_MINUTES;
             
         } else {
-            
-            // complete com a lógica para calcular o custo acima de 60 minutos de uso
-            long totalTempoPassado = 60 - minutes;
-             total = Math.ceil((totalTempoPassado / 15)) * ADICIONAL_15_MINUTES ;
-            
+            long addicionalMinutes = minutes - 60;
+            Double totalParts = ((double) addicionalMinutes / 15);
+            if (totalParts > totalParts.intValue()) { // 4.66 > 4
+                total += PRIMEIROS_60_MINUTES + (ADICIONAL_15_MINUTES * (totalParts.intValue() + 1));
+            } else { // 4.0
+                total += PRIMEIROS_60_MINUTES + (ADICIONAL_15_MINUTES * totalParts.intValue());
+            }
         }
 
         return new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
     }
 
-    public static BigDecimal calcularDesconto(BigDecimal valor, Long totalDeVezes) {
-        
-        return  valor.multiply(BigDecimal.valueOf(totalDeVezes));
+    public static BigDecimal calcularDesconto(BigDecimal custo, long numeroDeVezes) {
+        BigDecimal desconto = ((numeroDeVezes > 0) && (numeroDeVezes % 10 == 0))
+                ? custo.multiply(new BigDecimal(DESCONTO_PERCENTUAL))
+                : new BigDecimal(0);
+        return desconto.setScale(2, RoundingMode.HALF_EVEN);
     }
 }
