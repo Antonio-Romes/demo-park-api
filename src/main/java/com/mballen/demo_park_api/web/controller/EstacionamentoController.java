@@ -6,6 +6,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.mballen.demo_park_api.entity.ClienteVaga;
 import com.mballen.demo_park_api.entity.projection.ClienteVagaProjecton;
+import com.mballen.demo_park_api.jwt.JwtUserDetails;
 import com.mballen.demo_park_api.service.ClienteVagaService;
 import com.mballen.demo_park_api.service.EstacionamentoService; 
 import com.mballen.demo_park_api.web.dto.EstacionamentoCreateDto;
@@ -36,7 +37,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize; 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -163,6 +165,17 @@ public class EstacionamentoController {
                                                                   direction = Sort.Direction.ASC) Pageable pageable){
         
         Page<ClienteVagaProjecton> projection = clienteVagaService.buscarTodosPorClienteCpf(cpf,pageable);     
+        PageableDto dto = PageableMApper.tDto(projection);
+        return ResponseEntity.ok(dto);                                          
+    } 
+
+    @GetMapping 
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<PageableDto> getAllEstacionamentoDoCliente(@AuthenticationPrincipal JwtUserDetails user,
+                                                                  @PageableDefault(size=5, sort = "dataEntrada", 
+                                                                  direction = Sort.Direction.ASC) Pageable pageable){
+        
+        Page<ClienteVagaProjecton> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(),pageable);     
         PageableDto dto = PageableMApper.tDto(projection);
         return ResponseEntity.ok(dto);                                          
     } 
