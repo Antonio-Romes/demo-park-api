@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import com.mballen.demo_park_api.web.dto.EstacionamentoCreateDto;
+import com.mballen.demo_park_api.web.dto.PageableDto;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -223,4 +224,51 @@ public class EstacionamentoIT {
      
     }
 
+    @Test
+    public void buscarEstacionamento_PorClienteCpf_RetornaSucessoComStatus200(){
+  
+        PageableDto responseBody =  testClient
+                .get() 
+                .uri("/api/v1/estacionamentos/cpf/{cpf}?size=1&page=0","98401203015") 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com.br", "123456"))  
+                .exchange()
+                .expectStatus().isOk() 
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+                 
+                org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+                org.assertj.core.api.Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);  
+                org.assertj.core.api.Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2);  
+                org.assertj.core.api.Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);  
+
+                testClient
+                .get() 
+                .uri("/api/v1/estacionamentos/cpf/{cpf}?size=1&page=1","98401203015") 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"ana@email.com.br", "123456"))  
+                .exchange()
+                .expectStatus().isOk() 
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+                 
+                org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+                org.assertj.core.api.Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);  
+                org.assertj.core.api.Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2);  
+                org.assertj.core.api.Assertions.assertThat(responseBody.getNumber()).isEqualTo(0);  
+    }
+
+    @Test
+    public void buscarEstacionamento_PorClienteCpfComPerfilCliente_RetornaErrorMessageComStatus403(){
+  
+            testClient
+                .get() 
+                .uri("/api/v1/estacionamentos/cpf/{cpf}","98401203015") 
+                .headers(JwtAuthentication.getHeaderAuthentication(testClient,"bia@email.com.br", "123456"))  
+                .exchange()
+                .expectStatus().isForbidden() 
+                .expectBody()
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/cpf/98401203015")
+                .jsonPath("method").isEqualTo("GET") ;
+     
+    }
 }

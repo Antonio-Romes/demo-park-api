@@ -1,6 +1,6 @@
 package com.mballen.demo_park_api.service;
 
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 

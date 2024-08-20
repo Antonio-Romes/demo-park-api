@@ -15,6 +15,7 @@ import com.mballen.demo_park_api.web.dto.mapper.ClienteVagaMapper;
 import com.mballen.demo_park_api.web.dto.mapper.PageableMApper;
 import com.mballen.demo_park_api.web.exception.ErrorMessage;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.net.URI;
 
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -133,6 +134,28 @@ public class EstacionamentoController {
         return ResponseEntity.ok(dto);
     }
 
+    @Operation(summary = "Localizar os registros de estacionamentos do cliente por CPF.",
+                description = "Regidtro de estacionamentos do clientes por CPF. Requisição exige exige uso de um bearer token.",
+                security = @SecurityRequirement(name = "security"),
+                parameters ={
+                    @Parameter(in = ParameterIn.PATH, name = "cpf", description="Número do cpf referente ao cliente a ser consultado.",
+                    required = true),
+                    @Parameter(in = ParameterIn.QUERY, name = "page", description="Representa a página retornada.",
+                   content = @Content(schema =  @Schema(type = "interger", defaultValue = "0"))),
+                   @Parameter(in = ParameterIn.QUERY, name = "size", description="Representação total dos elementos por página",
+                   content = @Content(schema =  @Schema(type = "interger", defaultValue = "5"))),
+                   @Parameter(in = ParameterIn.QUERY, name = "sort", description="Campo padrão de ordenação 'dataEntrada', asc",
+                   array =  @ArraySchema(schema =  @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+                   required = true),
+                },
+                responses = {
+                    @ApiResponse(responseCode = "200", description="Recurso localizado com sucesso", 
+                        content = @Content(mediaType = "application/json;charset=UTF-8", 
+                        schema = @Schema(implementation = EstacionamentoResponseDto.class))), 
+                    @ApiResponse(responseCode = "403", description="Recurso não permitido ao 'CLIENTE'.",
+                        content = @Content(mediaType = "application/json,charset=UTF-8",
+                        schema = @Schema(implementation = ErrorMessage.class))), 
+                })
     @GetMapping("/cpf/{cpf}") 
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<PageableDto> getAllEstacionamentoPorCpf(@PathVariable String cpf,

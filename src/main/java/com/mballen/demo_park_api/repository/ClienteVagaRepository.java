@@ -1,8 +1,7 @@
 package com.mballen.demo_park_api.repository;
 
 import java.util.Optional;
-
-import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Pageable; 
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
