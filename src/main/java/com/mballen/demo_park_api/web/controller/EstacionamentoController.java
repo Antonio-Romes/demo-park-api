@@ -137,7 +137,7 @@ public class EstacionamentoController {
     }
 
     @Operation(summary = "Localizar os registros de estacionamentos do cliente por CPF.",
-                description = "Regidtro de estacionamentos do clientes por CPF. Requisição exige exige uso de um bearer token.",
+                description = "Registro de estacionamentos do clientes por CPF. Requisição exige exige uso de um bearer token.",
                 security = @SecurityRequirement(name = "security"),
                 parameters ={
                     @Parameter(in = ParameterIn.PATH, name = "cpf", description="Número do cpf referente ao cliente a ser consultado.",
@@ -169,6 +169,27 @@ public class EstacionamentoController {
         return ResponseEntity.ok(dto);                                          
     } 
 
+
+    @Operation(summary = "Localizar os registros de estacionamentos do cliente logado.",
+    description = " Localizar os registro de estacionamentos do clientes logado. Requisição exige uso de um bearer token.",
+    security = @SecurityRequirement(name = "security"),
+    parameters ={ 
+        @Parameter(in = ParameterIn.QUERY, name = "page", description="Representa a página retornada.",
+       content = @Content(schema =  @Schema(type = "interger", defaultValue = "0"))),
+       @Parameter(in = ParameterIn.QUERY, name = "size", description="Representação total dos elementos por página",
+       content = @Content(schema =  @Schema(type = "interger", defaultValue = "5"))),
+       @Parameter(in = ParameterIn.QUERY, name = "sort", description="Campo padrão de ordenação 'dataEntrada', asc",
+       array =  @ArraySchema(schema =  @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+       required = true),
+    },
+    responses = {
+        @ApiResponse(responseCode = "200", description="Recurso localizado com sucesso", 
+            content = @Content(mediaType = "application/json;charset=UTF-8", 
+            schema = @Schema(implementation = EstacionamentoResponseDto.class))), 
+        @ApiResponse(responseCode = "403", description="Recurso não permitido ao 'ADMIN'.",
+            content = @Content(mediaType = "application/json,charset=UTF-8",
+            schema = @Schema(implementation = ErrorMessage.class))), 
+    })
     @GetMapping 
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<PageableDto> getAllEstacionamentoDoCliente(@AuthenticationPrincipal JwtUserDetails user,
