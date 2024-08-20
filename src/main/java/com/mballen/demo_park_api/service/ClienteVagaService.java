@@ -1,8 +1,11 @@
 package com.mballen.demo_park_api.service;
 
+import org.springdoc.core.converters.models.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import com.mballen.demo_park_api.entity.ClienteVaga;
+import com.mballen.demo_park_api.entity.projection.ClienteVagaProjecton;
 import com.mballen.demo_park_api.repository.ClienteVagaRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -35,5 +38,11 @@ public class ClienteVagaService {
     public Long getTotalDeVezesEstacionamentoCompleto(String cpf) {
         
         return clienteVagaRepository.countByClienteCpfAndDataSaidaIsNotNull(cpf);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ClienteVagaProjecton> buscarTodosPorClienteCpf(String cpf, Pageable pageable) {
+         
+        return clienteVagaRepository.findAllByClienteCpf(cpf,pageable);
     }
 }
